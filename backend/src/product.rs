@@ -1,4 +1,4 @@
-use rocket::{Deserialize, Serialize};
+use rocket::{Deserialize, Serialize, json::Json};
 
 #[derive(Serialize, Deserialize)]
 struct Localization {
@@ -93,4 +93,8 @@ fn initialize_product_shop() -> Vec<Product_Shop> {
     {14, 5900749022392},
     {15, 5901534001752}
     ]
+}
+
+fn find_product(product_shop: Vec<Product_Shop>) -> Json<Vec<Product_Shop>> {
+  Json( vec![product_shop[0]])
 }
