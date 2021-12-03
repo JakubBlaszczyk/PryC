@@ -1,106 +1,393 @@
-use rocket::{Deserialize, Serialize, json::Json};
+use rocket::serde::{json::Json, Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct Localization {
     x: i64,
-    y: i64
+    y: i64,
 }
 
-#[derive(Serialize, Deserialize)]
-struct Shop {
-    ID: u64,
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Shop {
+    id: u64,
     local: Localization,
-    name: String
-}
-
-#[derive(Serialize, Deserialize)]
-struct Product {
-    EAN: u64,
     name: String,
-    photo: Vec<u8>
 }
 
-#[derive(Serialize, Deserialize)]
-struct Product_Shop {
-    ID: u64,
-    EAN: u64,
-    cost: f64
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Product {
+    ean: u64,
+    name: String,
+    photo: String,
 }
 
-fn initialize_products() -> Vec<Product> {
-    vec![{5901534001752, "Pieczywo żytnie chrupkie", "IMG_20211203_135633.jpg"}
-    {5900340000560, "Placek drożdżowy","IMG_20211203_135659.jpg"},
-    {5900437081106, "Babeczki czekoladowe", "IMG_20211203_135734.jpg"},
-    {5900862217422, "Galaretka truskawkowy smak", "IMG_20211203_135809.jpg"},
-    {5905133528740, "Vita Aloe", "IMG_20211203_140118.jpg"},
-    {40084176, "kinder country", "IMG_20211203_140131.jpg"},
-    {5901125001390, "Top orzeszki ziemne smażone", "IMG_20211203_140150.jpg"},
-    {5900571000025, "felix Orzeszki ziemne", "IMG_20211203_140200.jpg"},
-    {5900446014607, "Polaris Juicy", "IMG_20211203_140212.jpg"},
-    {5900749022392, "Migdały blanszowane", "IMG_20211203_140235.jpg"},
-    {5900587044068, "Chipsy jabłkowe", "IMG_20211203_140244.jpg"},
-    {5905617003596, "Orzechy laskowe", "IMG_20211203_140258.jpg"},
-    {8006540240960, "Lenor Fresh Air", "IMG_20211203_140317.jpg"},
-    {5901958612381, "Morelowo mus jabłkowy", "IMG_20211203_140334.jpg"},
-    {5449000297044, "Kinley TonicWater", "IMG_20211203_140356.jpg"},
-    {5900497341011, "7up", "IMG_20211203_140411.jpg"},
-    {5900497301015, "PepsiCola", "IMG_20211203_140422.jpg"},
-    {5905187004023, "Monster Munch", ".jpg"},
-    {5900699102502, "Radler warka", ".jpg"},
-    {5900910008460, "Mimi Draże", ".jpg"},
-    {, "", ".jpg"},
-    {-1, "Hackaton", "IMG_20211203_145458.jpg"}
+#[derive(Serialize, Deserialize, Copy, Clone)]
+pub struct ProductShop {
+    id: u64,
+    ean: u64,
+    cost: f64,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct ReturnInfo {
+    cost: f64,
+    name_product: String,
+    distance: f64,
+    name_shop: String,
+    photo: String,
+}
+
+pub fn initialize_products() -> Vec<Product> {
+    vec![
+        Product {
+            ean: 5901534001752,
+            name: String::from("Pieczywo żytnie chrupkie"),
+            photo: String::from("IMG_20211203_135633.jpg"),
+        },
+        Product {
+            ean: 5900340000560,
+            name: String::from("Placek drożdżowy"),
+            photo: String::from("IMG_20211203_135659.jpg"),
+        },
+        Product {
+            ean: 5900437081106,
+            name: String::from("Babeczki czekoladowe"),
+            photo: String::from("IMG_20211203_135734.jpg"),
+        },
+        Product {
+            ean: 5900862217422,
+            name: String::from("Galaretka truskawkowy smak"),
+            photo: String::from("IMG_20211203_135809.jpg"),
+        },
+        Product {
+            ean: 5905133528740,
+            name: String::from("Vita Aloe"),
+            photo: String::from("IMG_20211203_140118.jpg"),
+        },
+        Product {
+            ean: 40084176,
+            name: String::from("kinder country"),
+            photo: String::from("IMG_20211203_140131.jpg"),
+        },
+        Product {
+            ean: 5901125001390,
+            name: String::from("Top orzeszki ziemne smażone"),
+            photo: String::from("IMG_20211203_140150.jpg"),
+        },
+        Product {
+            ean: 5900571000025,
+            name: String::from("felix Orzeszki ziemne"),
+            photo: String::from("IMG_20211203_140200.jpg"),
+        },
+        Product {
+            ean: 5900446014607,
+            name: String::from("Polaris Juicy"),
+            photo: String::from("IMG_20211203_140212.jpg"),
+        },
+        Product {
+            ean: 5900749022392,
+            name: String::from("Migdały blanszowane"),
+            photo: String::from("IMG_20211203_140235.jpg"),
+        },
+        Product {
+            ean: 5900587044068,
+            name: String::from("Chipsy jabłkowe"),
+            photo: String::from("IMG_20211203_140244.jpg"),
+        },
+        Product {
+            ean: 5905617003596,
+            name: String::from("Orzechy laskowe"),
+            photo: String::from("IMG_20211203_140258.jpg"),
+        },
+        Product {
+            ean: 8006540240960,
+            name: String::from("Lenor Fresh Air"),
+            photo: String::from("IMG_20211203_140317.jpg"),
+        },
+        Product {
+            ean: 5901958612381,
+            name: String::from("Morelowo mus jabłkowy"),
+            photo: String::from("IMG_20211203_140334.jpg"),
+        },
+        Product {
+            ean: 5449000297044,
+            name: String::from("Kinley TonicWater"),
+            photo: String::from("IMG_20211203_140356.jpg"),
+        },
+        Product {
+            ean: 5900497341011,
+            name: String::from("7up"),
+            photo: String::from("IMG_20211203_140411.jpg"),
+        },
+        Product {
+            ean: 5900497301015,
+            name: String::from("PepsiCola"),
+            photo: String::from("IMG_20211203_140422.jpg"),
+        },
+        Product {
+            ean: 5905187004023,
+            name: String::from("Monster Munch"),
+            photo: String::from(".jpg"),
+        },
+        Product {
+            ean: 5900699102502,
+            name: String::from("Radler warka"),
+            photo: String::from(".jpg"),
+        },
+        Product {
+            ean: 5900910008460,
+            name: String::from("Mimi Draże"),
+            photo: String::from(".jpg"),
+        },
+        Product {
+            ean: 0,
+            name: String::from(""),
+            photo: String::from("jpg"),
+        },
+        Product {
+            ean: 0xFFFFFFFFFFFFFFFF,
+            name: String::from("Hackaton"),
+            photo: String::from("IMG_20211203_145458.jpg"),
+        },
     ]
 }
 
-fn initialize_shops() -> Vec<Shops> {
-    vec![{1, {-1, -2},   "Lidl"},
-         {2, {-10, 2},   "Biedronka"},
-         {3, {1, -7},    "Żabka"},
-         {4, {-5, 4},    "Delikatesy"},
-         {5, {-14, 1},   "Lidl"},
-         {6, {19, -18},  "Biedronka"},
-         {7, {-15, 20},  "Żabka"},
-         {8, {-11, -5},  "Delikatesy"},
-         {9, {-6, 9},    "Lidl"},
-         {10, {2, 6},    "Biedronka"},
-         {11, {15, 10},  "Żabka"},
-         {12, {1, -9},   "Delikatesy"},
-         {13, {-3, 15},  "Biedronka"},
-         {14, {-1, -19}, "Żabka"},
-         {15, {-5, -16}, "Delikatesy"}]
-}
-
-fn initialize_product_shop() -> Vec<Product_Shop> {
-    vec![{1, 40084176, 420.69},
-    {2, 5901125001390},
-    {2, 5900437081106},
-    {2, 5900699102502},
-    {2, 5905133528740},
-    {2, 5905187004023},
-    {2, 8006540240960},
-    {3, 5900910008460},
-    {4, 5905187004023},
-    {5, 5900699102502},
-    {6, 5905133528740},
-    {7, 5901534001752},
-    {8, 5901534001752},
-    {9, 5901534001752},
-    {10, 5901534001752},
-    {11, 5901534001752},
-    {12, 5901534001752},
-    {13, 5901534001752},
-    {14, 5900749022392},
-    {15, 5901534001752}
+pub fn initialize_shops() -> Vec<Shop> {
+    vec![
+        Shop {
+            id: 1,
+            local: Localization { x: -1, y: -2 },
+            name: String::from("Lidl"),
+        },
+        Shop {
+            id: 2,
+            local: Localization { x: -10, y: 2 },
+            name: String::from("Biedronka"),
+        },
+        Shop {
+            id: 3,
+            local: Localization { x: 1, y: -7 },
+            name: String::from("Żabka"),
+        },
+        Shop {
+            id: 4,
+            local: Localization { x: -5, y: 4 },
+            name: String::from("Delikatesy"),
+        },
+        Shop {
+            id: 5,
+            local: Localization { x: -14, y: 1 },
+            name: String::from("Lidl"),
+        },
+        Shop {
+            id: 6,
+            local: Localization { x: 19, y: -18 },
+            name: String::from("Biedronka"),
+        },
+        Shop {
+            id: 7,
+            local: Localization { x: -15, y: 20 },
+            name: String::from("Żabka"),
+        },
+        Shop {
+            id: 8,
+            local: Localization { x: -11, y: -5 },
+            name: String::from("Delikatesy"),
+        },
+        Shop {
+            id: 9,
+            local: Localization { x: -6, y: 9 },
+            name: String::from("Lidl"),
+        },
+        Shop {
+            id: 10,
+            local: Localization { x: 2, y: 6 },
+            name: String::from("Biedronka"),
+        },
+        Shop {
+            id: 11,
+            local: Localization { x: 15, y: 10 },
+            name: String::from("Żabka"),
+        },
+        Shop {
+            id: 12,
+            local: Localization { x: 1, y: -9 },
+            name: String::from("Delikatesy"),
+        },
+        Shop {
+            id: 13,
+            local: Localization { x: -3, y: 15 },
+            name: String::from("Biedronka"),
+        },
+        Shop {
+            id: 14,
+            local: Localization { x: -1, y: -19 },
+            name: String::from("Żabka"),
+        },
+        Shop {
+            id: 15,
+            local: Localization { x: -5, y: -16 },
+            name: String::from("Delikatesy"),
+        },
     ]
 }
 
-fn find_product(product_shop: Vec<Product_Shop>, product: Vec<Product_Shop>) -> Json<Vec<Product_Shop>> {
-  let mut temp: Vec<Product_Shop>;
-  for i in product_shop {
-    if i.ID == product.ID && i.EAN == product.EAN {
-      temp.push(i);
+pub fn initialize_product_shop() -> Vec<ProductShop> {
+    vec![
+        ProductShop {
+            id: 1,
+            ean: 40084176,
+            cost: 420.69,
+        },
+        ProductShop {
+            id: 2,
+            ean: 5901125001390,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 2,
+            ean: 5900437081106,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 2,
+            ean: 5900699102502,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 2,
+            ean: 5905133528740,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 2,
+            ean: 5905187004023,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 2,
+            ean: 8006540240960,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 3,
+            ean: 5900910008460,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 4,
+            ean: 5905187004023,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 5,
+            ean: 5900699102502,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 6,
+            ean: 5905133528740,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 7,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 8,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 9,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 10,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 11,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 12,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 13,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 14,
+            ean: 5900749022392,
+            cost: 0.0,
+        },
+        ProductShop {
+            id: 15,
+            ean: 5901534001752,
+            cost: 0.0,
+        },
+    ]
+}
+
+pub fn find_product_shop(
+    product_shop: Vec<ProductShop>,
+    products: Vec<Product>,
+    shops: Vec<Shop>,
+    ean: u64,
+) -> Json<Vec<ReturnInfo>> {
+    let mut temp_product_shop: ProductShop;
+    let mut temp_shop: Shop;
+    let mut temp_product: Product;
+    let mut return_value: Vec<ReturnInfo> = Vec::new();
+    let mut found: bool = false;
+    for i in product_shop.iter() {
+        if ean == i.ean {
+            temp_product = find_product(products.clone(), i.ean);
+            temp_shop = find_shop(shops.clone(), i.id);
+            return_value.push(ReturnInfo {
+                cost: i.cost,
+                name_product: temp_product.name,
+                distance: 0.69,
+                name_shop: temp_shop.name,
+                photo: temp_product.photo,
+            });
+            found = true;
+        }
     }
-  }
-  Json(temp)
+    if true {
+      temp_product = find_product(products.clone(), products[products.len() - 1].ean);
+        return_value.push(ReturnInfo {
+            cost: 420.69,
+            name_product: temp_product.name,
+            distance: 21.37,
+            name_shop: String::from("Papieżowy"),
+            photo: temp_product.photo,
+        });
+    }
+    Json(return_value)
+}
+
+fn find_product(products: Vec<Product>, ean: u64) -> Product {
+    for i in products.iter() {
+        if i.ean == ean {
+            return i.clone();
+        }
+    }
+    products[products.len() - 1].clone()
+}
+
+fn find_shop(shops: Vec<Shop>, id: u64) -> Shop {
+    for i in shops.iter() {
+        if i.id == id {
+            return i.clone();
+        }
+    }
+    shops[shops.len() - 1].clone()
 }
