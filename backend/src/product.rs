@@ -3,21 +3,21 @@ use rocket::{Deserialize, Serialize, json::Json};
 #[derive(Serialize, Deserialize)]
 struct Localization {
     x: i64,
-    y: i64,
+    y: i64
 }
 
 #[derive(Serialize, Deserialize)]
 struct Shop {
     ID: u64,
     local: Localization,
-    name: String,
+    name: String
 }
 
 #[derive(Serialize, Deserialize)]
 struct Product {
     EAN: u64,
     name: String,
-    photo: Vec<u8>,
+    photo: Vec<u8>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -95,6 +95,12 @@ fn initialize_product_shop() -> Vec<Product_Shop> {
     ]
 }
 
-fn find_product(product_shop: Vec<Product_Shop>) -> Json<Vec<Product_Shop>> {
-  Json( vec![product_shop[0]])
+fn find_product(product_shop: Vec<Product_Shop>, product: Vec<Product_Shop>) -> Json<Vec<Product_Shop>> {
+  let mut temp: Vec<Product_Shop>;
+  for i in product_shop {
+    if i.ID == product.ID && i.EAN == product.EAN {
+      temp.push(i);
+    }
+  }
+  Json(temp)
 }
