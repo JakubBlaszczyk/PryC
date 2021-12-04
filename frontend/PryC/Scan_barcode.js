@@ -1,14 +1,60 @@
-import React, { Component, useEffect, useState } from 'react';
-;
-import { StyleSheet, ScrollView, Text, View, Image, useWindowDimensions, TextInput, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
+} from 'react-native';
+import { RNCamera } from 'react-native-camera';
 
+class Scan_barcode extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      showCamera: true,
+    };
+  }
 
+  renderCamera = () => {
+    if(this.state.showCamera) {
+      return (
+        <RNCamera
+          ref={(cam) => {
+            this.camera = cam;
+          }}
+          style={styles.container}
+          aspect={Camera.constants.Aspect.fill}
+          onBarCodeRead={this._onBarCodeRead}>
+        </RNCamera>
+      );
+    } else {
+      return (
+        <View></View>
+      );
+    }
+  }
 
-const Scan_barcode = () => {
+  render() {
     return (
-        <Text>HOOHOHOHO SKANUJEMY</Text>
+      this.renderCamera()
     );
+  }
+
+  _onBarCodeRead = (e) => {
+    this.setState({showCamera: false});
+    alert("Barcode Found!",
+          "Type: " + e.type + "\nData: " + e.data);
+  }
 }
 
-export default Scan_barcode;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
+  },
+});
