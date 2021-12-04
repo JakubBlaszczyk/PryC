@@ -1,4 +1,5 @@
 use rocket::serde::{json::Json, Deserialize, Serialize};
+use std::num;
 
 #[derive(Serialize, Deserialize, Clone)]
 struct Localization {
@@ -336,13 +337,12 @@ pub fn initialize_product_shop() -> Vec<ProductShop> {
     ]
 }
 
-pub fn find_product_shop(
+pub fn get_data(
     product_shop: Vec<ProductShop>,
     products: Vec<Product>,
     shops: Vec<Shop>,
     ean: u64,
 ) -> Json<Vec<ReturnInfo>> {
-    let mut temp_product_shop: ProductShop;
     let mut temp_shop: Shop;
     let mut temp_product: Product;
     let mut return_value: Vec<ReturnInfo> = Vec::new();
@@ -354,17 +354,17 @@ pub fn find_product_shop(
             return_value.push(ReturnInfo {
                 cost: i.cost,
                 name_product: temp_product.name,
-                distance: 0.69,
+                distance: find_distance(temp_shop.clone(), Localization { x: 0, y: 0 }),
                 name_shop: temp_shop.name,
                 photo: temp_product.photo,
             });
             found = true;
         }
     }
-    if true {
-      temp_product = find_product(products.clone(), products[products.len() - 1].ean);
+    if !found {
+        temp_product = find_product(products.clone(), products[products.len() - 1].ean);
         return_value.push(ReturnInfo {
-            cost: 420.69,
+            cost: 34.69,
             name_product: temp_product.name,
             distance: 21.37,
             name_shop: String::from("Papieżowy"),
@@ -372,6 +372,60 @@ pub fn find_product_shop(
         });
     }
     Json(return_value)
+}
+
+fn get_cheapest_product(product_shop: Vec<ProductShop>) -> ProductShop {
+    let mut smallest: f64 = 99999999999.99;
+    let mut smallest_index: ProductShop = product_shop[0];
+    for i in product_shop.clone() {
+        if i.cost < smallest {
+            smallest = i.cost;
+            smallest_index = i.clone();
+        }
+    }
+    smallest_index
+}
+
+fn find_product_shop(products_shops: Vec<ProductShop>, id_ean: u64) -> Vec<ProductShop> {
+    let mut return_value: Vec<ProductShop> = Vec::new();
+    if id_ean < 15 && id_ean > 0 {
+        println!("We are here");
+        for i in products_shops.iter() {
+            if id_ean == i.id {
+                return_value.push(i.clone());
+            }
+        }
+    } else {
+        println!("We are there");
+        for i in products_shops.iter() {
+            if id_ean == i.ean {
+                return_value.push(i.clone());
+            }
+        }
+    }
+    return_value
+}
+
+fn find_closest_shop(shops: Vec<Shop>, local: Localization) -> (Shop, f64) {
+    let mut distance: f64 = 999999999999999.99;
+    let mut distance_object: Option<Shop> = None;
+    let mut current: f64;
+    for i in shops.iter() {
+        current = ((i.local.x - local.x) * (i.local.x - local.x)
+            + (i.local.y - local.y) * (i.local.y - local.y)) as f64;
+        current = current.powf(0.5);
+        if current < distance {
+            distance = current;
+            distance_object = Some(i.clone());
+        }
+    }
+    (distance_object.unwrap(), distance)
+}
+
+fn find_distance(shop: Shop, local: Localization) -> f64 {
+    (((shop.local.x - local.x) * (shop.local.x - local.x)
+        + (shop.local.y - local.y) * (shop.local.y - local.y)) as f64)
+        .powf(0.5)
 }
 
 fn find_product(products: Vec<Product>, ean: u64) -> Product {
