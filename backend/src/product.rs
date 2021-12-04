@@ -427,7 +427,7 @@ fn find_distance(shop: Shop, local: Localization) -> f64 {
         .powf(0.5)
 }
 
-fn find_product(products: Vec<Product>, ean: u64) -> Product {
+pub fn find_product(products: Vec<Product>, ean: u64) -> Product {
     for i in products.iter() {
         if i.ean == ean {
             return i.clone();

@@ -26,6 +26,19 @@ fn get_item_default() -> Json<Vec<product::ReturnInfo>> {
   product::get_data(product_shop, products, shops, 0)
 }
 
+#[get("/json/photos")]
+fn get_photos() -> Json<Vec<product::Product>> {
+  let products = product::initialize_products();
+  let mut data : Vec<product::Product> = Vec::new();
+  data.push(product::find_product(products.clone(), 5900497301015));
+  data.push(product::find_product(products.clone(), 5900571000025));
+  data.push(product::find_product(products.clone(), 40084176));
+  data.push(product::find_product(products.clone(), 5900862217422));
+  data.push(product::find_product(products.clone(), 5900437081106));
+  data.push(product::find_product(products.clone(), 5901534001752));
+  Json (data)
+}
+
 #[launch]
 fn rocket() -> _ {
 
@@ -34,4 +47,5 @@ fn rocket() -> _ {
         .mount("/images/", FileServer::from(relative!("imgs")))
         .mount("/", routes![get_item])
         .mount("/", routes![get_item_default])
+        .mount("/", routes![get_photos])
 }
