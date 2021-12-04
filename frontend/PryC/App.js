@@ -6,6 +6,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
+const productFromBackend = ({route, navigation}) => {
+  alert('dupa');
+  return (
+  <Image 
+    source={{
+      uri: '192.168.243.204:8000/images/' + route.navigation.state.params.img_url}}
+    style={{width: 100, height: 100}}
+  />
+  );
+};
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -13,11 +24,22 @@ export default function App() {
         screenOptions={{
           headerShown: false
         }}
-        initialRouteName='MainPage'
+        initialRouteName= 'Main_page' 
         >
         <Stack.Screen 
-          name="MainPage"
+          name="Main_page"
           component={Main_page}
+          options={{}}
+        />
+        <Stack.Screen 
+          name="Scan_barcode"
+          component={Scan_barcode}
+          options={{}}
+        />
+         <Stack.Screen 
+          name="productFromBackend"
+          component={productFromBackend}
+          options={{}}
         />
         
       </Stack.Navigator>

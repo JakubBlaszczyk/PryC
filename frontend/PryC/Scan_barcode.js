@@ -1,75 +1,64 @@
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from 'react-native';
-import {Camera} from 'expo';
 
-class Scan_barcode extends Component {
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      showCamera: true,
-    };
+const productFromBackend = ({route, navigation}) => {
+  alert('dupa');
+  return (
+  <Image 
+    source={{
+      uri: '192.168.42.43:8000/images/' + route.navigation.state.params.img_url}}
+    style={{width: 100, height: 100}}
+  />
+  );
+};
+
+
+export default function App({ navigation }) {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+      (async () => {
+          alert(data);
+        const request = await fetch('192.168.42.43:8000/json/' + data);
+        const response = await request.json();
+
+        navigate('productFromBackend', {img_url: response.data.photo});
+      })();
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
   }
 
-  renderCamera = () => {
-    if(this.state.showCamera) {
-      return (
-        <RNCamera
-          ref={ref => {
-            this.camera = ref;
-          }}
-          style={styles.preview}
-          type={Camera.Constants.Type.back}
-          flashMode={RNCamera.Constants.FlashMode.on}
-          androidCameraPermissionOptions={{
-            title: 'Permission to use camera',
-            message: 'We need your permission to use your camera',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-          androidRecordAudioPermissionOptions={{
-            title: 'Permission to use audio recording',
-            message: 'We need your permission to use your audio',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-          onGoogleVisionBarcodesDetected={this._onBarCodeRead}
-        />
-      );
-    } else {
-      return (
-        <View></View>
-      );
-    }
-  }
-
-  render() {
-    return (
-      this.renderCamera()
-    );
-  }
-
-  _onBarCodeRead = (e) => {
-    this.setState({showCamera: false});
-    alert("Barcode Found!",
-          "Type: " + e.type + "\nData: " + e.data);
-  }
+  return (
+    <View style={styles.container}>
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      />
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "transparent",
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
 });
-
-export default Scan_barcode;
