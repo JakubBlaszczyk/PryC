@@ -28,7 +28,6 @@ fn get_item_default() -> Json<Vec<product::ReturnInfo>> {
 
 #[launch]
 fn rocket() -> _ {
-    product::initialize_shops();
 
     rocket::build()
         .mount("/", routes![index])
