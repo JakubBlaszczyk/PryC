@@ -91,7 +91,7 @@ class Main_page extends Component {
       placeholder="Wyszukaj produkt"/>
       </View>
       <TouchableOpacity
-        onPress={this.props.navigation.navigate('Scan_barcode')}
+        onPress={() => this.props.navigation.navigate('Scan_barcode')}
         style={{
           marginTop:5,
           marginLeft:15,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginTop:25,
     height:100,
     width:340,
-    backgroundColor:'999',
+    backgroundColor:'#999',
   },
   adBanner:{
     marginTop:25,
