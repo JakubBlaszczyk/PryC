@@ -22,13 +22,26 @@ class Scan_barcode extends Component {
     if(this.state.showCamera) {
       return (
         <RNCamera
-          ref={(cam) => {
-            this.camera = cam;
+          ref={ref => {
+            this.camera = ref;
           }}
-          style={styles.container}
-          aspect={Camera.constants.Aspect.fill}
-          onBarCodeRead={this._onBarCodeRead}>
-        </RNCamera>
+          style={styles.preview}
+          type={RNCamera.Constants.Type.back}
+          flashMode={RNCamera.Constants.FlashMode.on}
+          androidCameraPermissionOptions={{
+            title: 'Permission to use camera',
+            message: 'We need your permission to use your camera',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
+          androidRecordAudioPermissionOptions={{
+            title: 'Permission to use audio recording',
+            message: 'We need your permission to use your audio',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
+          onGoogleVisionBarcodesDetected={this._onBarCodeRead}
+        />
       );
     } else {
       return (
@@ -58,3 +71,5 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
 });
+
+export default Scan_barcode;
