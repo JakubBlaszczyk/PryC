@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
-import { RNCamera } from 'react-native-camera';
+import {Camera} from 'expo';
 
 class Scan_barcode extends Component {
 
@@ -26,7 +26,7 @@ class Scan_barcode extends Component {
             this.camera = ref;
           }}
           style={styles.preview}
-          type={RNCamera.Constants.Type.back}
+          type={Camera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.on}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
