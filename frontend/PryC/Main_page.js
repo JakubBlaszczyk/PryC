@@ -1,6 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component, useEffect, useState } from 'react';
-;
 import { StyleSheet, ScrollView, Text, View, Image, useWindowDimensions, TextInput, TouchableOpacity } from 'react-native';
 
 const ScrollWithRandomProducts = (props) => {
@@ -9,7 +8,12 @@ const ScrollWithRandomProducts = (props) => {
     return (
     <TouchableOpacity style={styles.scrollableButtonElem}>
           <Image 
-            style={{height: 30, width:30}}
+            style={{
+              resizeMode:"cover",
+              height: 70, 
+              width:70,
+              borderRadius:25,
+            }}
             source = {{uri:'http://localhost:8000/images/' + item.photo}}
           />
     </TouchableOpacity>
@@ -72,7 +76,8 @@ class Main_page extends Component {
         <View style={{
           width:260,
           height:55,
-          backgroundColor:'#ff6',
+          backgroundColor:'#fff',
+          borderWidth:1,
           justifyContent:'center',
           alignItems:'flex-end',
           borderRadius:30,
@@ -81,9 +86,9 @@ class Main_page extends Component {
         }}>
       <TextInput style={{width:200,
       height:45,
-      backgroundColor:'#f99',
-      marginRight:8,
-      borderRadius:30,}}/>
+      backgroundColor:'#fff',
+      marginRight:12,}}
+      placeholder="Wyszukaj produkt"/>
       </View>
       <TouchableOpacity
         onPress={this.props.navigation.navigate('Scan_barcode')}
@@ -92,12 +97,11 @@ class Main_page extends Component {
           marginLeft:15,
           height:50,
           width:50,
-          backgroundColor:"#f01",
+          backgroundColor:"#FFF",
+          borderWidth:1,
           borderRadius:10,
         }}
-        title="Learn More"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
+        title="|||"
       />
       </View>
       <ScrollWithRandomProducts data={this.state.randomProducts}/>
@@ -144,19 +148,20 @@ class Main_page extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#999',
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   header: {
-    backgroundColor: '#f6f',
+    backgroundColor: '#fff',
     height:50,
     width:360,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius:20,
+    borderWidth:1,
   },
   searchAndScan:{
-    backgroundColor:'#6f6',
+    backgroundColor:'#999',
     width:340,
     height:60,
     marginTop:25,
@@ -169,28 +174,31 @@ const styles = StyleSheet.create({
     borderRadius:30,
     marginTop:10,
     marginLeft:10,
-    backgroundColor:'#0FF',
+    backgroundColor:'#444',
+    alignItems:'center',
+    justifyContent:"center",
   },
   verticalScrollableMenu:{
     marginTop:25,
     height:100,
     width:340,
-    backgroundColor:'#55F',
+    backgroundColor:'999',
   },
   adBanner:{
     marginTop:25,
     height:120,
     width:340,
-    backgroundColor:'#55F',
+    backgroundColor:'#444',
     borderRadius:30,
   },
   footer:{
-    backgroundColor: '#f6f',
+    backgroundColor: '#fff',
     marginTop:25,
     height:85,
     width:360,
     borderTopLeftRadius: 20,
     borderTopRightRadius:20,
+    borderWidth:1,
   }
 });
 
