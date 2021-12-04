@@ -1,9 +1,60 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { Component, useEffect, useState } from 'react';
 ;
 import { StyleSheet, ScrollView, Text, View, Image, useWindowDimensions, TextInput, TouchableOpacity } from 'react-native';
 
-const Main_page = () => {
+const ScrollWithRandomProducts = (props) => {
+  console.log(props);
+  const returnElement = props.data.map((item) => {
+    <TouchableOpacity style={styles.scrollableButtonElem}>
+          <Text>item.name</Text>
+          console.log('123'));
+          </TouchableOpacity>
+  });
+  return (
+    returnElement
+  );
+};
+/* upper scrollbar
+<View style={styles.verticalScrollableMenu}>
+          <ScrollView horizontal>
+          <TouchableOpacity style={styles.scrollableButtonElem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.scrollableButtonElem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.scrollableButtonElem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.scrollableButtonElem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.scrollableButtonElem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.scrollableButtonElem}>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+*/
+const ScrollSingleItem = (props) => {
+
+};
+
+class Main_page extends Component {
+  state =  {
+    randomProducts: []
+  };
+  
+  componentDidMount() {
+    (async() => {
+      var request = await fetch('http://localhost:8000/json/photos');
+      if (request.ok === true) {
+        this.setState({randomProducts: await request.json()});
+        console.log(this.state.randomProducts);
+      } else {
+        console.log(`Fetch failed`);
+      }
+    })() 
+  }
+
+  render() {
     return (
       <View style={styles.container}>
       <View style={styles.header}>
@@ -41,22 +92,8 @@ const Main_page = () => {
         accessibilityLabel="Learn more about this purple button"
       />
       </View>
-      <View style={styles.verticalScrollableMenu}>
-        <ScrollView horizontal>
-          <TouchableOpacity style={styles.scrollableButtonElem}>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.scrollableButtonElem}>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.scrollableButtonElem}>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.scrollableButtonElem}>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.scrollableButtonElem}>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.scrollableButtonElem}>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
+      <ScrollWithRandomProducts data={this.state.randomProducts}/>
+      
       <View style={styles.adBanner}>
 
       </View>
@@ -89,8 +126,11 @@ const Main_page = () => {
     />*/}
       <StatusBar style="auto" />
     </View> 
-    );
-}
+    ); 
+  }
+   
+};
+
 
 //const { height, width } = useWindowDimensions();
 const styles = StyleSheet.create({
