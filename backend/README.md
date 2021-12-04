@@ -1,1 +1,1 @@
-# hackaton-rzeszow-business
+# PryC

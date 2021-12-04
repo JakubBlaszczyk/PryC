@@ -1,5 +1,4 @@
 use rocket::serde::{json::Json, Deserialize, Serialize};
-use std::num;
 
 #[derive(Serialize, Deserialize, Clone)]
 struct Localization {
