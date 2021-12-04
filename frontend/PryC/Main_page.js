@@ -4,15 +4,26 @@ import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, Text, View, Image, useWindowDimensions, TextInput, TouchableOpacity } from 'react-native';
 
 const ScrollWithRandomProducts = (props) => {
-  console.log(props);
-  const returnElement = props.data.map((item) => {
+  //console.log(props);
+  var returnElement = props.data.map((item) => {
+    return (
     <TouchableOpacity style={styles.scrollableButtonElem}>
-          <Text>item.name</Text>
-          console.log('123'));
-          </TouchableOpacity>
+          <Image 
+            style={{height: 30, width:30}}
+            source = {{uri:'http://localhost:8000/images/' + item.photo}}
+          />
+    </TouchableOpacity>
+    )
   });
+  //console.log(returnElement);
   return (
-    returnElement
+    <>
+     <View style={styles.verticalScrollableMenu}> 
+     <ScrollView horizontal>
+     {returnElement}
+     </ScrollView>
+     </View>
+     </>
   );
 };
 /* upper scrollbar
@@ -33,12 +44,9 @@ const ScrollWithRandomProducts = (props) => {
         </ScrollView>
       </View>
 */
-const ScrollSingleItem = (props) => {
-
-};
 
 class Main_page extends Component {
-  state =  {
+   state =  {
     randomProducts: []
   };
   
@@ -47,7 +55,7 @@ class Main_page extends Component {
       var request = await fetch('http://localhost:8000/json/photos');
       if (request.ok === true) {
         this.setState({randomProducts: await request.json()});
-        console.log(this.state.randomProducts);
+        //console.log(this.state.randomProducts);
       } else {
         console.log(`Fetch failed`);
       }
@@ -78,7 +86,7 @@ class Main_page extends Component {
       borderRadius:30,}}/>
       </View>
       <TouchableOpacity
-        //onPress={}
+        onPress={this.props.navigation.navigate('Scan_barcode')}
         style={{
           marginTop:5,
           marginLeft:15,

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Main_page from './Main_page.js';
+import Scan_barcode from './Scan_barcode.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -11,13 +12,14 @@ export default function App() {
       <Stack.Navigator
         screenOptions={{
           headerShown: false
-        }}>
+        }}
+        initialRouteName='MainPage'
+        >
         <Stack.Screen 
           name="MainPage"
-          
           component={Main_page}
-          options={{}}
         />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
